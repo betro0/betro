@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة وعرض وتعديل وحذف المحاور</title>
+  <style>
+    
+    #body{
+       direction: rtl;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .popup{
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 40px;
+      width: 350px;
+      height: 250px;
+      border: 1px solid #0091b9;
+      border-radius: 30px;
+      background-color: #fff;
+      box-shadow: 0px 0px 15px 0px #0091b9;
+      z-index: 1;
+      overflow-y: auto; 
+      max-height: 50vh; 
+      max-width: 100vh;
+
+    }
+    .popup_delet{
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 40px;
+      width: 350px;
+    height: 80px;
+    border-radius: 30px;
+      border: 1px solid #0091b9;
+      box-shadow: 0px 0px 15px 0px #0091b9;
+      background-color: #fff;
+    }
+
+    #showImage {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+    }
+    #add,#show,#edit,#delet{
+        display: none;
+    }
+    textarea{
+      width: 100%;
+    height: 70%;
+    outline: none;
+    border: none;
+    background: #deecf0;
+    margin: 6px 0;
+    border-radius: 6px;
+    padding: 5px;
+    }
+textarea:focus{
+  background: #bde5f0;
+    transform: scale(1.05);
+}
+
+    button{
+  position: absolute;
+    width: 20%;
+    height: 40px;
+    border: none ;
+    cursor: pointer;
+    font-size: medium;
+    background: #0091b9;
+    color: rgb(255, 255, 255);
+    border-radius: 30px;
+    transition: 0.5s;
+    margin: 0px;
+}
+button:hover{
+    background: #17c1f0;
+    letter-spacing: 2px;
+    
+}
+.select_style{
+  width: 50%;
+}
+.button1{
+  left: 77%;
+}
+.button2{
+  left: 52%;
+}
+.button3{
+  left: 27%
+}
+.button4{
+  left: 2%;
+}
+.button_style {
+    margin: 10px 0px 0px 0px;
+      background-color: #cdcdcd;
+    padding: 25px;
+    height: 40px;
+    border: none;
+    border-radius: 20px
+    }
+    .button_submit{
+  width: 80%;
+    top: auto;
+    margin: 10px;
+}
+.ul_show{
+  /*top: 30%;
+    position: absolute;*/
+     word-wrap: break-word; 
+}
+.div_style{
+          background:#cdcdcd ;
+          margin: 20px 5px 5px 5px;
+          padding: 50px 25px 50px 0px;
+          border-radius: 20px;
+          min-height: 300px;
+}
+h3 {
+text-align: center;
+           background: #0091b9;
+           color: white;
+           font-size: xx-large;
+           width: 220px;
+           padding: 10px;
+           margin: 0 auto;
+           border-radius: 30px;
+}
+    
+
+
+        #showPopup {
+            display: flex;
+  justify-content: flex-end;
+  align-items:right;
+}
+
+/*
+#showContent {
+    position: absolute;
+  left: 95%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+
+}*/
+
+
+
+  </style>
+</head>
+<body id="body">
+
+<!-- الأزرار -->
+
+<div class="button_style">
+  <button onclick="openAddPopup()" id="add" style="display: block;" class="button1">إضافة محاور المؤتمر</button>
+  <button onclick="openShowPopup()" id="show" style="display: block;" class="button2">عرض محاور المؤتمر</button>
+  <button onclick="openEditPopup()" id="edit" style="display: block;" class="button3">تعديل محاور المؤتمر</button>
+  <button onclick="openDeletePopup()" id="delet" style="display: block;" class="button4">حذف محاور المؤتمر</button>
+  </div>
+<!-- نافذة إضافة المحاور-->
+<div id="addPopup" class="popup">
+  <span class="close" onclick="closePopup('addPopup')">&times;</span>
+  <label for="infoTextarea">محاور المؤتمر:</label>
+  <textarea id="infoTextarea" placeholder="ادخل محاور المؤتمر:"></textarea>
+  <br>
+  <button onclick="saveUserInfo()" class="button_submit">حفظ</button>
+</div >
+
+ <div class="div_style">
+<h3>محاور المؤتمر</h3>
+<!-- نافذة عرض المحاور-->
+<div id="showPopup">
+  <span class="close" onclick="closePopup('showPopup')"></span>
+  <ol id="showContent" class="ul_show"></ol>
+</div>
+</div>
+
+
+
+
+
+<!-- نافذة تعديل المحاور-->
+<div id="editPopup" class="popup">
+  <span class="close" onclick="closePopup('editPopup')">&times;</span>
+  <label for="selectPerson">اختر المحور:</label>
+  <select id="selectPerson" class="select_style" onchange="loadPersonData()"></select>
+  <br>
+  <label for="editInfoTextarea">محاور المؤتمر:</label>
+  <textarea id="editInfoTextarea" placeholder="ادخل محاور المؤتمر:"></textarea>
+  <br>
+  <button onclick="saveEditedUserInfo()" class="button_submit">حفظ التعديل</button>
+</div>
+
+<!-- نافذة حذف المحاور-->
+<div id="deletePopup" class="popup_delet">
+  <span class="close" onclick="closePopup('deletePopup')">&times;</span>
+  <label for="deletePerson">اختر المحور المراد حدفه:</label>  
+  <select id="deletePerson" class="select_style" ></select>
+  <br>
+  <button onclick="confirmDelete()" class="button_submit">تأكيد الحذف</button>
+</div>
+
+<script>
+  var userInformation = [];
+  var userRole = "admin"; // يمكن تحديده من قاعدة البيانات
+
+  // فحص صلاحيات المستخدم
+  if (userRole === "admin") {
+        document.getElementById('add').style.display = 'block';
+        document.getElementById('show').style.display = 'block';
+        document.getElementById('edit').style.display = 'block';
+        document.getElementById('delet').style.display = 'block';
+    } else {
+        document.getElementById('show').style.display = 'block';
+    }
+
+  // فتح نافذة إضافة المحاور
+  function openAddPopup() {
+    document.getElementById('addPopup').style.display = 'block';
+  }
+
+  // عرض المحاور في نافذة منفصلة
+  function openShowPopup() {
+    var displayText = "";
+    for (var i = 0; i < userInformation.length; i++) {
+      displayText += "<li>المحاور: " + userInformation[i].info + "</li>";
+    }
+
+    if (displayText !== "") {
+      document.getElementById('showContent').innerHTML = displayText;
+      openPopup('showPopup');
+    } else {
+      alert("لم يتم العثور على معلومات محفوظة.");
+    }
+  }
+
+  // فتح نافذة تعديل المحاور
+  function openEditPopup() {
+    var selectPersonElement = document.getElementById('selectPerson');
+    selectPersonElement.innerHTML = "";
+
+    // ملأ قائمة الاختيار بالمحاور  المحفوظة
+    for (var i = 0; i < userInformation.length; i++) {
+      var option = document.createElement('option');
+      option.value = i;
+      option.text = "المحور " + (i + 1);
+      selectPersonElement.add(option);
+    }
+
+    loadPersonData(); // استرجاع بيانات المحور المحدد للتعديل
+    openPopup('editPopup');
+  }
+
+  // فتح نافذة حذف المحاور
+  function openDeletePopup() {
+    var deletePersonElement = document.getElementById('deletePerson');
+    deletePersonElement.innerHTML = "";
+
+    // ملأ قائمة الاختيار بالمحاور المحفوظة
+    for (var i = 0; i < userInformation.length; i++) {
+      var option = document.createElement('option');
+      option.value = i;
+      option.text = "المحور " + (i + 1);
+      deletePersonElement.add(option);
+    }
+
+    openPopup('deletePopup');
+  }
+
+  // استرجاع بيانات المحور المحدد للتعديل
+  function loadPersonData() {
+    var selectedIndex = document.getElementById('selectPerson').value;
+
+    // إذا تم اختيار محور، استرجاع بياناته لتعديلها
+    if (selectedIndex !== "") {
+      document.getElementById('editInfoTextarea').value = userInformation[selectedIndex].info;
+    }
+  }
+
+  // تأكيد حذف المحور المحدد
+  function confirmDelete() {
+    var selectedIndex = document.getElementById('deletePerson').value;
+
+    if (selectedIndex !== "") {
+      var confirmed = confirm("هل أنت متأكد من رغبتك في حذف هذا المحور؟");
+
+      if (confirmed) {
+        userInformation.splice(selectedIndex, 1);
+        alert("تم حذف المحور بنجاح.");
+        closePopup('deletePopup');
+      }
+    } else {
+      alert("الرجاء اختيار محور للحذف.");
+    }
+  }
+
+  // إغلاق النوافذ
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+  }
+
+  // حفظ معلومات المحور الجديد
+  function saveUserInfo() {
+    var info = document.getElementById('infoTextarea').value;
+
+    if (info) {
+      userInformation.push({ info: info });
+      alert("تم حفظ المعلومات المحور: " + info);
+      var divStyleElement = document.querySelector('.div_style');
+        var newHeight = userInformation.length * 35; // يمكنك تعديل هذه القيمة حسب الاحتياج
+        divStyleElement.style.minHeight = newHeight + 'px';
+      closePopup('addPopup');
+    } else {
+      alert("الرجاء إدخال المعلومات.");
+    }
+  }
+
+  // حفظ التعديلات على معلومات المحور
+  function saveEditedUserInfo() {
+    var selectedIndex = document.getElementById('selectPerson').value;
+    var editedInfo = document.getElementById('editInfoTextarea').value;
+
+    if (selectedIndex !== "" && editedInfo) {
+      // تحديث بيانات المحور المحدد
+      userInformation[selectedIndex].info = editedInfo;
+      alert("تم تعديل المعلومات المحور إلى: " + editedInfo);
+      closePopup('editPopup');
+    } else {
+      alert("الرجاء اختيار محور للتعديل.");
+    }
+  }
+
+  // فتح نافذة
+  function openPopup(popupId) {
+    document.getElementById(popupId).style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

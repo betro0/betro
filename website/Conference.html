@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة وعرض وتعديل وحذف المؤتمرات</title>
+  <style>
+      #body{
+        direction: rtl; 
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 40px;
+      width: 300px;
+      height: auto;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      z-index: 1;
+      overflow-y: auto; /* إضافة التمرير العمودي */
+      max-height: 50vh; /* ارتفاع أقصى للنافذة */
+      max-width: 100vh;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #showImage {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+    }
+    #add,#show{
+        display: none;
+    }
+  </style>
+</head>
+<body id="body">
+<h1>المؤتمرات العلمية </h1>
+<!-- الأزرار -->
+<button onclick="openAddPopup()" id="add">إضافة المؤتمر</button>
+<button onclick="openShowPopup()" id="show">عرض المؤتمرات</button>
+<!-- نافذة إضافة المؤتمرات-->
+<div id="addPopup" class="popup">
+  <span class="close" onclick="closePopup('addPopup')">&times;</span>
+  <label for="nameInput">اسم المؤتمر:</label>
+  <input type="text" id="nameInput" placeholder="ادخل اسم المؤتمر">
+  <br>
+  <label for="timeInput">توقيت الؤتمر:</label>
+  <input type="date" id="timeInput" placeholder="ادخل توقيت المؤتمر">
+  <br>
+  <label for="addressInput">مكان اقامة المؤتمر:</label>
+  <input type="text" id="addressInput" placeholder="ادخل مكان المؤتمر">
+  <br>
+  <label for="imageInput">الصورة:</label>
+  <input type="file" id="imageInput" accept="image/*">
+  <br>
+  <button onclick="saveUserInfo()">حفظ</button>
+</div>
+
+<!-- نافذة عرض المؤتمرات-->
+<div id="showPopup" class="popup">
+  <span class="close" onclick="closePopup('showPopup')">&times;</span>
+  <ul id="showContent"></ul>
+  <img id="showImage" src="" alt="صورة المستخدم" onclick="showImage()">
+</div>
+
+<script>
+  var userInformation = [];
+  var userRole = "admin"; // يمكن تحديده من قاعدة البيانات
+
+  // فحص صلاحيات المستخدم
+  if (userRole === "admin") {
+        document.getElementById('add').style.display = 'block';
+        document.getElementById('show').style.display = 'block';
+    } else {
+        document.getElementById('show').style.display = 'block';
+    }
+
+  // فتح نافذة إضافة المؤتمرات
+  function openAddPopup() {
+    document.getElementById('addPopup').style.display = 'block';
+  }
+
+  // عرض المعلومات في نافذة منفصلة
+  function openShowPopup() {
+    var displayText = "";
+    for (var i = 0; i < userInformation.length; i++) {
+      displayText += "<li>الاسم: " + userInformation[i].name + "، توقيت المؤتمر:" + userInformation[i].time +
+                     "، مكان اقامة المؤتمر: " + userInformation[i].address +
+                      // إضافة عرض العنوان
+                     " <img src='" + userInformation[i].image + "' alt='صورة المستخدم' style='max-width: 100%; height: auto;'></li>";
+    }
+
+    if (displayText !== "") {
+      document.getElementById('showContent').innerHTML = displayText;
+      openPopup('showPopup');
+    } else {
+      alert("لم يتم العثور على معلومات محفوظة.");
+    }
+  }
+
+
+
+  // إغلاق النوافذ
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+  }
+
+  // حفظ معلومات المؤتمر الجديد
+  function saveUserInfo() {
+    var name = document.getElementById('nameInput').value;
+    var time = document.getElementById('timeInput').value;
+    var address = document.getElementById('addressInput').value; // إضافة سطر
+    var imageInput = document.getElementById('imageInput');
+    var imageSrc = "";
+
+    if (imageInput.files.length > 0) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        imageSrc = e.target.result;
+        saveUserData(name, time, address, imageSrc); // تعديل الدالة
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    } else {
+      saveUserData(name, time, address, imageSrc); // تعديل الدالة
+    }
+  }
+
+  // حفظ بيانات المؤتمر
+  function saveUserData(name, time, address, imageSrc) {
+    if (name && time) {
+      userInformation.push({ name: name, time: time, address: address, image: imageSrc}); // إضافة حقل العنوان
+      alert("تم حفظ المؤتمر: " + name + "، وتوقيت بدء المؤتمر: " + time + "، والعنوان: " + address); // تعديل الرسالة
+      closePopup('addPopup');
+    } else {
+      alert("الرجاء إدخال الاسم والعمر.");
+    }
+  }
+
+  // عرض الصورة بحجم كامل في نافذة منفصلة
+  function showImage() {
+    var showImageSrc = document.getElementById('showImage').src;
+    if (showImageSrc !== "") {
+      window.open(showImageSrc, '_blank');
+    }
+  }
+
+  // فتح نافذة
+  function openPopup(popupId) {
+    document.getElementById(popupId).style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

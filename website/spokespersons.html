@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة وعرض وتعديل وحذف المتحدتين</title>
+  <style>
+     #body{
+      direction: rtl; 
+    } 
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 40px;
+      width: 350px;
+      height: 250px;
+      border: 1px solid #0091b9;
+      background-color: #fff;
+      border-radius: 30px;
+      box-shadow: 0px 0px 15px 0px #0091b9;
+      z-index: 1;
+      overflow-y: auto; /* إضافة التمرير العمودي */
+      max-height: 50vh; /* ارتفاع أقصى للنافذة */
+      max-width: 100vh;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .popup_delet{
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 40px;
+      width: 350px;
+      height: 80px;
+      border-radius: 30px;
+      border: 1px solid #0091b9;
+      box-shadow: 0px 0px 15px 0px #0091b9;
+      background-color: #fff;
+    }
+    #showImage {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+    }
+    #add,#edit,#delet{
+      display: none;
+    }
+  input{
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    background: #deecf0;
+    margin: 6px 0;
+    border-radius: 6px;
+    padding: 5px;
+  }
+  input:focus{
+    background: #bde5f0;
+    transform: scale(1.05);
+  }
+  button{
+    position: absolute;
+    width: 20%;
+    height: 40px;
+    border: none ;
+    cursor: pointer;
+    font-size: medium;
+    background: #0091b9;
+    color: rgb(255, 255, 255);
+    border-radius: 30px;
+    transition: 0.5s;
+    margin: 0px;
+  }
+
+  button:hover{
+    background: #17c1f0;
+    letter-spacing: 2px;
+    
+  }
+  .button1{
+  left: 77%;
+  }
+  .button2{
+  left: 52%;
+  }
+  .button3{
+  left: 27%
+  }
+  .button4{
+  left: 2%;
+  }
+  .button_style {
+    margin: 10px 0px 0px 0px;
+    background-color: #cdcdcd;
+    padding: 25px;
+    height: 40px;
+    border: none;
+    border-radius: 20px
+    }
+  .button_submit{
+    width: 80%;
+    top: auto;
+    margin: 10px;
+  }
+  .card {
+    width: 210px;
+    height: 320px;
+    background: #0091b9;
+    color: white;
+    border-radius: 40px 0 40px 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    word-wrap: break-word; 
+    /*grid-template-columns: 100px 100px 100px;*/
+    margin: 0px 0px 20px 0px
+   }
+  .card img {
+    max-width: 85%;
+    height: 90%;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    margin-right: 10%;
+   }
+  .card-text h3 {
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 5px;
+   }
+  .card-text p {
+    margin-right: 15px;
+  }
+  .cardContainer {
+    grid-template-columns: 30% 30% 30%;
+    row-gap:20px;
+    column-gap: 60px;
+    margin-top: 20px;
+    margin-right: 30px;
+    background:#cdcdcd ;
+    border-radius: 20px;
+    margin: 20px 100px 5px 5px;
+    padding: 25px 25px 0px 0px;        
+  }
+  .select_style{
+    width: 50%;
+  }
+  .div_style{
+    background:#cdcdcd ;
+    border-radius: 20px;
+    margin: 20px 5px 5px 5px;
+    padding: 50px 25px 50px 0px;
+  }
+  h2{
+    color: white;
+    background: #0091b9;
+    text-align: center;
+    font-size: xxx-large;
+    width: 220px;
+    padding: 10px;
+    margin-right: 40%;
+    border-radius: 30px;
+  }
+  </style>
+</head>
+<body id="body">
+
+<!-- الأزرار -->
+<div class="button_style">
+<button onclick="openAddPopup()" id="add" style="display: block;" class="button1"> دخول كا متحدث</button>
+<button onclick="openShowPopup()" id="show" style="display: block;" class="button2">عرض المتحدتين</button>
+<button onclick="openEditPopup()" id="edit" style="display: block;" class="button3">تعديل بيانات</button>
+<button onclick="openDeletePopup()" id="delet" style="display: block;" class="button4">حذف المتحدث</button>
+</div>
+
+<!-- نافذة إضافة متحدث-->
+<div id="addPopup" class="popup">
+  <span class="close" onclick="closePopup('addPopup')">×</span>
+  <label for="nameInput">اسم المتحدث</label>
+  <input type="text" id="nameInput" placeholder="ادخل اسمك">
+  <br>
+  <label for="ageInput" class="inp1">عمر المتحدث</label>
+  <input type="number" id="ageInput" class="inp1" placeholder="ادخل عمرك">
+  <br>
+  <label for="addressInput"  >وظيفة المتحدث</label>
+  <input type="text" id="addressInput"  placeholder="ادخل وظيفتك">
+  <br>
+  <label for="email" class="inp1">البريد الالكتروني</label>
+  <input type="text" id="email" class="inp1" placeholder="ادخل البريد الالكتروني الخاص بك:">
+  <br>
+  <label for="imageInput">الصورة</label>
+  <input type="file" id="imageInput" accept="image">
+  <br>
+  <button onclick="saveUserInfo()" class="button_submit">حفظ</button>  
+</div>
+
+
+<!-- نافذة عرض المعلومات  المتحدثين-->
+<div class="div_style">
+   <h2> المتحدثين</h2>
+  <div id="showPopup" class="cardContainer"></div>
+</div>
+
+
+<!-- نافذة تعديل معلومات  المتحدث-->
+<div id="editPopup" class="popup">
+  <span class="close" onclick="closePopup('editPopup')">×</span>
+  <label for="selectPerson">اختر المتحدث</label>
+  <select id="selectPerson" onchange="loadPersonData()" class="select_style"></select>
+  <br>
+  <label for="editNameInput">اسم المتحدث</label>
+  <input type="text" id="editNameInput" placeholder="ادخل اسمك">
+  <br>
+  <label for="editAgeInput">عمر المتحدث</label>
+  <input type="number" id="editAgeInput" placeholder="ادخل عمرك">
+  <br>
+  <label for="editAddressInput">وظيفة المتحدث</label>
+  <input type="text" id="editAddressInput" placeholder="ادخل وظيفتك:">
+  <br>
+  <label for="editemail">البريد الالكتروني</label>
+  <input type="text" id="editemail" placeholder="ادخل بريدك الالكتروني">
+  <br>
+  <label for="editImageInput">الصورة</label>
+  <input type="file" id="editImageInput" accept="image">
+  <br>
+  <button onclick="saveEditedUserInfo()" class="button_submit">حفظ التعديل</button>
+</div>
+
+
+<!-- نافذة حذف معلومات  المتحدث-->
+<div id="deletePopup" class="popup_delet">
+  <span class="close" onclick="closePopup('deletePopup')">×</span>
+  <label for="deletePerson">اختر الشخص للحذف</label>
+  <select id="deletePerson" class="select_style"></select>
+  <br>
+  <button onclick="confirmDelete()" class="button_submit">تأكيد الحذف</button>
+</div>
+
+
+
+<script>
+  var userInformation = [];
+  var userRole = "admin"; // يمكن تحديده من قاعدة البيانات
+
+  // فحص صلاحيات المستخدم
+  if (userRole === "admin") {
+        document.getElementById('add').style.display = 'block';
+        document.getElementById('show').style.display = 'block';
+        document.getElementById('edit').style.display = 'block';
+        document.getElementById('delet').style.display = 'block';
+    } else {
+        document.getElementById('show').style.display = 'block';
+    }
+
+  // فتح نافذة إضافة المعلومات
+  function openAddPopup() {
+    document.getElementById('addPopup').style.display = 'block';
+  }
+
+  // عرض المعلومات في نافذة منفصلة
+  function openShowPopup() {
+ var d=displaySpeakers();
+    displaySpeakers();
+    d.style.display='grid';
+    openPopup('showPopup');
+    /*
+    var displayText = "";
+    for (var i = 0; i < userInformation.length; i++) {
+      displayText += "<li>الاسم: " + userInformation[i].name + "، العمر: " + userInformation[i].age +
+                     "، الوظيفة: " + userInformation[i].address +
+                     "، البريد الالكتروني: " + userInformation[i].email +  // إضافة عرض العنوان
+                     " <img src='" + userInformation[i].image + "' alt='صورة المستخدم' style='max-width: 100%; height: auto;'></li>";
+    
+     
+                     }
+
+    if (displayText !== "") {
+      document.getElementById('showContent').innerHTML = displayText;
+      openPopup('showPopup');
+    } else {
+      alert("لم يتم العثور على معلومات محفوظة.");
+    } */
+  }
+  function displaySpeakers()
+  {
+    var cardContainer = document.getElementById('showPopup');
+    cardContainer.style.display='grid';
+    cardContainer.innerHTML = ""; // إفراغ السابق
+    for (var i = 0; i < userInformation.length; i++)
+     {
+      var card = createCard(userInformation[i]);
+      cardContainer.appendChild(card);
+      }
+  }
+
+
+        // إنشاء بطاقة (card) للمتحدث
+    function createCard(speaker) {
+      var card = document.createElement('div');
+      card.className = 'card';
+    // إضافة الصورة في الجزء العلوي باستخدام دائرة
+      var imageDiv = document.createElement('div');
+      imageDiv.className = 'card-image';
+      var image = document.createElement('img');
+      image.src = speaker.image ;
+      image.alt = 'صورة المستخدم';
+      imageDiv.appendChild(image);
+      card.appendChild(imageDiv);
+    // إضافة النصوص أسفل الصورة
+      var textDiv = document.createElement('div');
+      textDiv.className = 'card-text';
+      var name = document.createElement('h3');
+      name.textContent = speaker.name;
+      textDiv.appendChild(name);
+      var age = document.createElement('p');
+      age.textContent = 'العمر: ' + speaker.age;
+      textDiv.appendChild(age);
+      var address = document.createElement('p');
+      address.textContent = 'الوظيفة: ' + speaker.address;
+      textDiv.appendChild(address);
+      var email = document.createElement('p');
+      email.textContent = '' + speaker.email;
+      textDiv.appendChild(email);
+      card.appendChild(textDiv);
+      return card;
+}
+ 
+    // إغلاق النافذة
+  function closePopup(popupId)
+     {
+      document.getElementById(popupId).style.display = 'none';
+      }
+
+  // فتح نافذة تعديل المعلومات
+  function openEditPopup() 
+  {
+    var selectPersonElement = document.getElementById('selectPerson');
+    selectPersonElement.innerHTML = "";
+    // ملأ قائمة الاختيار بأسماء المتحدتين المحفوظة
+    for (var i = 0; i < userInformation.length; i++) {
+      var option = document.createElement('option');
+      option.value = i;
+      option.text = userInformation[i].name;
+      selectPersonElement.add(option);
+    }
+    loadPersonData(); // استرجاع بيانات المتحدث المحدد للتعديل
+    openPopup('editPopup');
+  }
+
+  // فتح نافذة حذف المتحدث
+  function openDeletePopup() {
+    var deletePersonElement = document.getElementById('deletePerson');
+    deletePersonElement.innerHTML = "";
+    // ملأ قائمة الاختيار بأسماء المتحدتين المحفوظة
+    for (var i = 0; i < userInformation.length; i++) {
+      var option = document.createElement('option');
+      option.value = i;
+      option.text = userInformation[i].name;
+      deletePersonElement.add(option);
+    }
+    openPopup('deletePopup');
+  }
+
+  // استرجاع بيانات المتحدث المحدد للتعديل
+  function loadPersonData() {
+    var selectedIndex = document.getElementById('selectPerson').value;
+    // إذا تم اختيار متحدث، استرجاع بياناته لتعديلها
+    if (selectedIndex !== "") {
+      document.getElementById('editNameInput').value = userInformation[selectedIndex].name;
+      document.getElementById('editAgeInput').value = userInformation[selectedIndex].age;
+      document.getElementById('editAddressInput').value = userInformation[selectedIndex].address; // إضافة سطر
+      document.getElementById('editemail').value = userInformation[selectedIndex].email; // إضافة سطر
+    }
+  }
+
+  // تأكيد حذف المتحدث المحدد
+  function confirmDelete() {
+    var selectedIndex = document.getElementById('deletePerson').value;
+    if (selectedIndex !== "") {
+      var confirmed = confirm("هل أنت متأكد من رغبتك في حذف هدا المتحدث؟");
+      if (confirmed) {
+        userInformation.splice(selectedIndex, 1);
+        alert("تم حذف المتحدث بنجاح.");
+        closePopup('deletePopup');
+      }
+    } else {
+      alert("الرجاء اختيار متحدث للحذف.");
+    }
+  }
+
+  // حفظ معلومات المتحدث الجديد
+  function saveUserInfo() {
+    var name = document.getElementById('nameInput').value;
+    var age = document.getElementById('ageInput').value;
+    var address = document.getElementById('addressInput').value; // إضافة سطر
+    var email = document.getElementById('email').value; // إضافة سطر
+    var imageInput = document.getElementById('imageInput');
+    var imageSrc = "";
+    if (imageInput.files.length > 0) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        imageSrc = e.target.result;
+        saveUserData(name, age, address,email, imageSrc); // تعديل الدالة
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    } else {
+      saveUserData(name, age, address,email, imageSrc); // تعديل الدالة
+    }
+  }
+
+  // حفظ بيانات المتحدث
+  function saveUserData(name, age, address,email, imageSrc) {
+    if (name && age) {
+      userInformation.push({ name: name, age: age, address: address, image: imageSrc, email: email}); // إضافة حقل العنوان
+      alert("تم حفظ الاسم: " + name + "، والعمر: " + age + "، والعنوان: " + address); // تعديل الرسالة
+      closePopup('addPopup');
+    } else {
+      alert("الرجاء إدخال الاسم والعمر.");
+    }
+  }
+
+  // حفظ التعديلات على معلومات المتحدث
+  function saveEditedUserInfo() {
+    var selectedIndex = document.getElementById('selectPerson').value;
+    var editedName = document.getElementById('editNameInput').value;
+    var editedAge = document.getElementById('editAgeInput').value;
+    var editedAddress = document.getElementById('editAddressInput').value; // إضافة سطر
+    var editedemail = document.getElementById('editemail').value; // إضافة سطر
+    var editImageInput = document.getElementById('editImageInput');
+    var editedImageSrc = "";
+
+    if (editImageInput.files.length > 0) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        editedImageSrc = e.target.result;
+        saveEditedUserData(selectedIndex, editedName, editedAge, editedAddress,editedemail, editedImageSrc); 
+      };
+      reader.readAsDataURL(editImageInput.files[0]);
+    } else {
+      saveEditedUserData(selectedIndex, editedName, editedAge, editedAddress,editedemail, editedImageSrc); 
+    }
+  }
+
+  // حفظ التعديلات على بيانات المتحدث
+  function saveEditedUserData(selectedIndex, editedName, editedAge, editedAddress,editedemail, editedImageSrc) {
+    if (selectedIndex !== "" && editedName && editedAge) {
+      // تحديث بيانات المتحدث المحدد
+      userInformation[selectedIndex].name = editedName;
+      userInformation[selectedIndex].age = editedAge;
+      userInformation[selectedIndex].address = editedAddress; // تعديل العنوان
+      userInformation[selectedIndex].email = editedemail; // تعديل العنوان
+      userInformation[selectedIndex].image = editedImageSrc;
+
+      alert("تم تعديل الاسم إلى: " + editedName + "، والعمر إلى: " + editedAge + "، والوظيفة الى: " + editedAddress+"، والبريد الالكتروني الى: " + editedemail); // تعديل الرسالة
+      closePopup('editPopup');
+    } else {
+      alert("الرجاء اختيار متحدث وإدخال الاسم والعمر للتعديل.");
+    }
+  }
+
+  // عرض الصورة بحجم كامل في نافذة منفصلة
+  function showImage() {
+    var showImageSrc = document.getElementById('showImage').src;
+    if (showImageSrc !== "") {
+      window.open(showImageSrc, '_blank');
+    }
+  } 
+
+  // فتح نافذة
+  function openPopup(popupId) {
+    document.getElementById(popupId).style.display = 'block';
+  }
+</script>
+</body>
+</html>

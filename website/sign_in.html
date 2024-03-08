@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <style>
+        .sing_in{
+            text-align: center;
+            position: fixed;
+            left:35%;
+            top:25%;
+            width: 500px;
+            height: 410px;
+          /*  background-color: #cdcdcd;*/
+            border-radius: 30px;
+            box-shadow: 10px 10px 10px 10px rgb(119, 86, 86);
+        }
+        input{
+            width: 20%;
+            height: 10%;
+            outline: none;
+            border: none;
+            background: #deecf0;
+            margin: 6px 0;
+            border-radius: 6px;
+            padding: 5px;
+            border: solid #dcdedf;
+        }
+        input:focus{
+            background: #bde5f0;
+            transform: scale(1.05);
+        }
+        .submit{
+            top: 85%;
+            left: 25%;
+            position: absolute;
+            width: 50%;
+            height: 40px;
+            border: none ;
+            cursor: pointer;
+            font-size: medium;
+            border: solid #17c1f0;
+            background: #deecf0;
+            color: rgb(24, 22, 22);
+            border-radius: 30px;
+            transition: 0.5s;
+            margin: 0px;
+        }
+        .submit:hover{
+            background: #17c1f0;
+    letter-spacing: 2px;
+        }
+        .login_in{
+            text-decoration: none;
+            top: 75%;
+            left: 63%;
+            position: fixed;
+        }
+        .f_name,.l_name{
+            width: 180px;
+            ;
+        }
+        .email{
+            width: 380px;
+        }
+        .password,.date_birth{
+            width: 145px;
+        }
+     </style>
+
+
+
+
+</head>
+<body>
+    <form action="" class="sing_in">
+        <h3>مؤتمرات علمية</h3>
+        <h1>تسجيل دخول</h1>
+
+        
+        <label for="f_name" class="label_fname">
+        <input type="text" name="f_name" id="f_name" class="f_name" placeholder="الاسم الاول" required></label>
+
+        <label for="l_name" class="label_lname">
+        <input type="text" name="l_name" id="l_name" class="l_name" placeholder="اسم العائلة" required></label><br>
+
+        <label for="email" class="label_email" >
+        <input type="email" name="email" id="email" class="email" placeholder="البريد الالكتروني" required></label><br>
+
+        <label for="password">
+        <input type="password" name="password" id="password" class="password" placeholder="كلمة السر" minlength="8" required ></label>
+
+        <label for="date_birth">تاريخ ميلادك
+        <input type="date" name="date_birth" id="date_birth" class="date_birth" placeholder="تاريخ الميلاد" required></label><br>
+        <button  type="submit"  class="submit" onclick="oncl()">Submit</button>
+        <a href="./login_in.html" class="login_in">تسجيل دخول</a><br>
+    </form>
+
+    <script>
+      function oncl(){
+        var f_name = document.getElementById("f_name").value;
+            var l_name = document.getElementById("l_name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var date_birth = document.getElementById("date_birth").value;
+            if (f_name && l_name && email && password && date_birth) {
+                window.location.href = './Home_page.html';
+                }
+      }
+    </script>
+</body>
+</html>
